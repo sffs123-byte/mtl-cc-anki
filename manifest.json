@@ -1581,5 +1581,1049 @@
         205
       ]
     ]
+  },
+  {
+    "id": "case-20260912-t01-r01-c01",
+    "title": "가슴통증 · 증례 01",
+    "kind": "cpx",
+    "cc_id": "8",
+    "source_location": {
+      "table": 1,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t01-r01-c01"
+  },
+  {
+    "id": "case-20260912-t01-r01-c02",
+    "title": "두근거림 · 증례 02",
+    "kind": "cpx",
+    "cc_id": "10",
+    "source_location": {
+      "table": 1,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t01-r01-c02"
+  },
+  {
+    "id": "case-20260912-t01-r01-c03",
+    "title": "실신 · 증례 03",
+    "kind": "cpx",
+    "cc_id": "9",
+    "source_location": {
+      "table": 1,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t01-r01-c03"
+  },
+  {
+    "id": "case-20260912-t01-r02-c01",
+    "title": "가슴통증 · 증례 04",
+    "kind": "cpx",
+    "cc_id": "8",
+    "source_location": {
+      "table": 1,
+      "row": 3,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t01-r02-c01"
+  },
+  {
+    "id": "case-20260912-t01-r02-c03",
+    "title": "실신 · 증례 05",
+    "kind": "cpx",
+    "cc_id": "9",
+    "source_location": {
+      "table": 1,
+      "row": 3,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t01-r02-c03"
+  },
+  {
+    "id": "case-20260912-t02-r01-c01",
+    "title": "급성복통 · 증례 06",
+    "kind": "cpx",
+    "cc_id": "1",
+    "source_location": {
+      "table": 2,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t02-r01-c01"
+  },
+  {
+    "id": "case-20260912-t02-r01-c02",
+    "title": "만성복통/소화불량 · 증례 07",
+    "kind": "cpx",
+    "cc_id": "2",
+    "source_location": {
+      "table": 2,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t02-r01-c02"
+  },
+  {
+    "id": "case-20260912-t02-r01-c03",
+    "title": "구토 · 증례 08",
+    "kind": "cpx",
+    "cc_id": "5",
+    "source_location": {
+      "table": 2,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t02-r01-c03"
+  },
+  {
+    "id": "case-20260912-t02-r01-c04",
+    "title": "황달 · 증례 09",
+    "kind": "cpx",
+    "cc_id": "7",
+    "source_location": {
+      "table": 2,
+      "row": 2,
+      "column": 4
+    },
+    "source_case_id": "case-20260912-t02-r01-c04"
+  },
+  {
+    "id": "case-20260912-t02-r02-c01",
+    "title": "급성복통 · 증례 10",
+    "kind": "cpx",
+    "cc_id": "1",
+    "source_location": {
+      "table": 2,
+      "row": 3,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t02-r02-c01"
+  },
+  {
+    "id": "case-20260912-t02-r02-c02",
+    "title": "만성복통/소화불량 · 증례 11",
+    "kind": "cpx",
+    "cc_id": "2",
+    "source_location": {
+      "table": 2,
+      "row": 3,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t02-r02-c02"
+  },
+  {
+    "id": "case-20260912-t03-r01-c02",
+    "title": "설사 · 증례 12",
+    "kind": "cpx",
+    "cc_id": "6-2",
+    "source_location": {
+      "table": 3,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t03-r01-c02"
+  },
+  {
+    "id": "case-20260912-t03-r01-c03",
+    "title": "토혈 · 증례 13",
+    "kind": "cpx",
+    "cc_id": "3",
+    "source_location": {
+      "table": 3,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t03-r01-c03"
+  },
+  {
+    "id": "case-20260912-t03-r01-c04",
+    "title": "혈변 · 증례 14",
+    "kind": "cpx",
+    "cc_id": "4",
+    "source_location": {
+      "table": 3,
+      "row": 2,
+      "column": 4
+    },
+    "source_case_id": "case-20260912-t03-r01-c04"
+  },
+  {
+    "id": "case-20260912-t03-r02-c03",
+    "title": "토혈 · 증례 15",
+    "kind": "cpx",
+    "cc_id": "3",
+    "source_location": {
+      "table": 3,
+      "row": 3,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t03-r02-c03"
+  },
+  {
+    "id": "case-20260912-t04-r01-c01",
+    "title": "호흡곤란 · 증례 16",
+    "kind": "cpx",
+    "cc_id": "16",
+    "source_location": {
+      "table": 4,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t04-r01-c01"
+  },
+  {
+    "id": "case-20260912-t04-r01-c02",
+    "title": "기침 · 증례 17",
+    "kind": "cpx",
+    "cc_id": "13",
+    "source_location": {
+      "table": 4,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t04-r01-c02"
+  },
+  {
+    "id": "case-20260912-t04-r01-c03",
+    "title": "콧물/코막힘 · 증례 18",
+    "kind": "cpx",
+    "cc_id": "14",
+    "source_location": {
+      "table": 4,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t04-r01-c03"
+  },
+  {
+    "id": "case-20260912-t04-r01-c04",
+    "title": "객혈 · 증례 19",
+    "kind": "cpx",
+    "cc_id": "15",
+    "source_location": {
+      "table": 4,
+      "row": 2,
+      "column": 4
+    },
+    "source_case_id": "case-20260912-t04-r01-c04"
+  },
+  {
+    "id": "case-20260912-t04-r02-c01",
+    "title": "호흡곤란 · 증례 20",
+    "kind": "cpx",
+    "cc_id": "16",
+    "source_location": {
+      "table": 4,
+      "row": 3,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t04-r02-c01"
+  },
+  {
+    "id": "case-20260912-t04-r02-c02",
+    "title": "기침 · 증례 21",
+    "kind": "cpx",
+    "cc_id": "13",
+    "source_location": {
+      "table": 4,
+      "row": 3,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t04-r02-c02"
+  },
+  {
+    "id": "case-20260912-t04-r02-c03",
+    "title": "콧물/코막힘 · 증례 22",
+    "kind": "cpx",
+    "cc_id": "14",
+    "source_location": {
+      "table": 4,
+      "row": 3,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t04-r02-c03"
+  },
+  {
+    "id": "case-20260912-t04-r02-c04",
+    "title": "객혈 · 증례 23",
+    "kind": "cpx",
+    "cc_id": "15",
+    "source_location": {
+      "table": 4,
+      "row": 3,
+      "column": 4
+    },
+    "source_case_id": "case-20260912-t04-r02-c04"
+  },
+  {
+    "id": "case-20260912-t04-r03-c01",
+    "title": "호흡곤란 · 증례 24",
+    "kind": "cpx",
+    "cc_id": "16",
+    "source_location": {
+      "table": 4,
+      "row": 4,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t04-r03-c01"
+  },
+  {
+    "id": "case-20260912-t05-r01-c01",
+    "title": "다뇨 · 증례 25",
+    "kind": "cpx",
+    "cc_id": "17",
+    "source_location": {
+      "table": 5,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t05-r01-c01"
+  },
+  {
+    "id": "case-20260912-t05-r01-c02",
+    "title": "핍뇨 · 증례 26",
+    "kind": "cpx",
+    "cc_id": "17-2",
+    "source_location": {
+      "table": 5,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t05-r01-c02"
+  },
+  {
+    "id": "case-20260912-t05-r01-c03",
+    "title": "혈뇨 · 증례 27",
+    "kind": "cpx",
+    "cc_id": "18",
+    "source_location": {
+      "table": 5,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t05-r01-c03"
+  },
+  {
+    "id": "case-20260912-t05-r02-c03",
+    "title": "혈뇨 · 증례 28",
+    "kind": "cpx",
+    "cc_id": "18",
+    "source_location": {
+      "table": 5,
+      "row": 3,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t05-r02-c03"
+  },
+  {
+    "id": "case-20260912-t06-r01-c02",
+    "title": "빈뇨 · 증례 29",
+    "kind": "cpx",
+    "cc_id": "19",
+    "source_location": {
+      "table": 6,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t06-r01-c02"
+  },
+  {
+    "id": "case-20260912-t06-r02-c02",
+    "title": "빈뇨 · 증례 30",
+    "kind": "cpx",
+    "cc_id": "19",
+    "source_location": {
+      "table": 6,
+      "row": 3,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t06-r02-c02"
+  },
+  {
+    "id": "case-20260912-t06-r03-c02",
+    "title": "빈뇨 · 증례 31",
+    "kind": "cpx",
+    "cc_id": "19",
+    "source_location": {
+      "table": 6,
+      "row": 4,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t06-r03-c02"
+  },
+  {
+    "id": "case-20260912-t07-r01-c01",
+    "title": "고혈압 · 증례 32",
+    "kind": "cpx",
+    "cc_id": "11",
+    "source_location": {
+      "table": 7,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t07-r01-c01"
+  },
+  {
+    "id": "case-20260912-t07-r01-c02",
+    "title": "이상지질혈증 · 증례 33",
+    "kind": "cpx",
+    "cc_id": "12",
+    "source_location": {
+      "table": 7,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t07-r01-c02"
+  },
+  {
+    "id": "case-20260912-t07-r02-c01",
+    "title": "고혈압 · 증례 34",
+    "kind": "cpx",
+    "cc_id": "11",
+    "source_location": {
+      "table": 7,
+      "row": 3,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t07-r02-c01"
+  },
+  {
+    "id": "case-20260912-t08-r01-c01",
+    "title": "피로 · 증례 35",
+    "kind": "cpx",
+    "cc_id": "22",
+    "source_location": {
+      "table": 8,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t08-r01-c01"
+  },
+  {
+    "id": "case-20260912-t08-r01-c02",
+    "title": "체중감소 · 증례 36",
+    "kind": "cpx",
+    "cc_id": "23",
+    "source_location": {
+      "table": 8,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t08-r01-c02"
+  },
+  {
+    "id": "case-20260912-t08-r01-c03",
+    "title": "체중증가 · 증례 37",
+    "kind": "cpx",
+    "cc_id": "24",
+    "source_location": {
+      "table": 8,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t08-r01-c03"
+  },
+  {
+    "id": "case-20260912-t08-r02-c03",
+    "title": "체중증가 · 증례 38",
+    "kind": "cpx",
+    "cc_id": "24",
+    "source_location": {
+      "table": 8,
+      "row": 3,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t08-r02-c03"
+  },
+  {
+    "id": "case-20260912-t09-r01-c01",
+    "title": "발열 · 증례 39",
+    "kind": "cpx",
+    "cc_id": "20",
+    "source_location": {
+      "table": 9,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t09-r01-c01"
+  },
+  {
+    "id": "case-20260912-t09-r01-c02",
+    "title": "쉽게멍 · 증례 40",
+    "kind": "cpx",
+    "cc_id": "21",
+    "source_location": {
+      "table": 9,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t09-r01-c02"
+  },
+  {
+    "id": "case-20260912-t09-r01-c03",
+    "title": "피부발진 · 증례 41",
+    "kind": "cpx",
+    "cc_id": "27",
+    "source_location": {
+      "table": 9,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t09-r01-c03"
+  },
+  {
+    "id": "case-20260912-t10-r01-c01",
+    "title": "관절통/부기 · 증례 42",
+    "kind": "cpx",
+    "cc_id": "25",
+    "source_location": {
+      "table": 10,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t10-r01-c01"
+  },
+  {
+    "id": "case-20260912-t10-r01-c02",
+    "title": "목통증 · 증례 43",
+    "kind": "cpx",
+    "cc_id": "26",
+    "source_location": {
+      "table": 10,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t10-r01-c02"
+  },
+  {
+    "id": "case-20260912-t10-r01-c03",
+    "title": "허리통증 · 증례 44",
+    "kind": "cpx",
+    "cc_id": "26",
+    "source_location": {
+      "table": 10,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t10-r01-c03"
+  },
+  {
+    "id": "case-20260912-t11-r01-c01",
+    "title": "어지럼 · 증례 45",
+    "kind": "cpx",
+    "cc_id": "32",
+    "source_location": {
+      "table": 11,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t11-r01-c01"
+  },
+  {
+    "id": "case-20260912-t11-r01-c02",
+    "title": "두통 · 증례 46",
+    "kind": "cpx",
+    "cc_id": "33",
+    "source_location": {
+      "table": 11,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t11-r01-c02"
+  },
+  {
+    "id": "case-20260912-t11-r01-c03",
+    "title": "경련 · 증례 47",
+    "kind": "cpx",
+    "cc_id": "34",
+    "source_location": {
+      "table": 11,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t11-r01-c03"
+  },
+  {
+    "id": "case-20260912-t11-r02-c02",
+    "title": "두통 · 증례 48",
+    "kind": "cpx",
+    "cc_id": "33",
+    "source_location": {
+      "table": 11,
+      "row": 3,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t11-r02-c02"
+  },
+  {
+    "id": "case-20260912-t11-r02-c03",
+    "title": "경련 · 증례 49",
+    "kind": "cpx",
+    "cc_id": "34",
+    "source_location": {
+      "table": 11,
+      "row": 3,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t11-r02-c03"
+  },
+  {
+    "id": "case-20260912-t12-r01-c01",
+    "title": "근력/감각이상 · 증례 50",
+    "kind": "cpx",
+    "cc_id": "35",
+    "source_location": {
+      "table": 12,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t12-r01-c01"
+  },
+  {
+    "id": "case-20260912-t12-r01-c02",
+    "title": "떨림/운동이상 · 증례 51",
+    "kind": "cpx",
+    "cc_id": "37",
+    "source_location": {
+      "table": 12,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t12-r01-c02"
+  },
+  {
+    "id": "case-20260912-t12-r01-c03",
+    "title": "의식장애 · 증례 52",
+    "kind": "cpx",
+    "cc_id": "36",
+    "source_location": {
+      "table": 12,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t12-r01-c03"
+  },
+  {
+    "id": "case-20260912-t12-r02-c01",
+    "title": "근력/감각이상 · 증례 53",
+    "kind": "cpx",
+    "cc_id": "35",
+    "source_location": {
+      "table": 12,
+      "row": 3,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t12-r02-c01"
+  },
+  {
+    "id": "case-20260912-t13-r01-c01",
+    "title": "기분변화 · 증례 54",
+    "kind": "cpx",
+    "cc_id": "28",
+    "source_location": {
+      "table": 13,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t13-r01-c01"
+  },
+  {
+    "id": "case-20260912-t13-r01-c02",
+    "title": "수면장애 · 증례 55",
+    "kind": "cpx",
+    "cc_id": "30",
+    "source_location": {
+      "table": 13,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t13-r01-c02"
+  },
+  {
+    "id": "case-20260912-t13-r01-c03",
+    "title": "기억력저하 · 증례 56",
+    "kind": "cpx",
+    "cc_id": "31",
+    "source_location": {
+      "table": 13,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t13-r01-c03"
+  },
+  {
+    "id": "case-20260912-t13-r01-c04",
+    "title": "불안 · 증례 57",
+    "kind": "cpx",
+    "cc_id": "29",
+    "source_location": {
+      "table": 13,
+      "row": 2,
+      "column": 4
+    },
+    "source_case_id": "case-20260912-t13-r01-c04"
+  },
+  {
+    "id": "case-20260912-t13-r02-c04",
+    "title": "불안 · 증례 58",
+    "kind": "cpx",
+    "cc_id": "29",
+    "source_location": {
+      "table": 13,
+      "row": 3,
+      "column": 4
+    },
+    "source_case_id": "case-20260912-t13-r02-c04"
+  },
+  {
+    "id": "case-20260912-t14-r01-c01",
+    "title": "유방덩이/유방통 · 증례 59",
+    "kind": "cpx",
+    "cc_id": "38",
+    "source_location": {
+      "table": 14,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t14-r01-c01"
+  },
+  {
+    "id": "case-20260912-t14-r01-c02",
+    "title": "질분비물 · 증례 60",
+    "kind": "cpx",
+    "cc_id": "39-1",
+    "source_location": {
+      "table": 14,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t14-r01-c02"
+  },
+  {
+    "id": "case-20260912-t14-r01-c03",
+    "title": "질출혈(월경과다) · 증례 61",
+    "kind": "cpx",
+    "cc_id": "39-2",
+    "source_location": {
+      "table": 14,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t14-r01-c03"
+  },
+  {
+    "id": "case-20260912-t14-r02-c01",
+    "title": "유방덩이/유방통 · 증례 62",
+    "kind": "cpx",
+    "cc_id": "38",
+    "source_location": {
+      "table": 14,
+      "row": 3,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t14-r02-c01"
+  },
+  {
+    "id": "case-20260912-t14-r02-c03",
+    "title": "질출혈(월경과다) · 증례 63",
+    "kind": "cpx",
+    "cc_id": "39-2",
+    "source_location": {
+      "table": 14,
+      "row": 3,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t14-r02-c03"
+  },
+  {
+    "id": "case-20260912-t15-r01-c01",
+    "title": "무월경 · 증례 64",
+    "kind": "cpx",
+    "cc_id": "40-1",
+    "source_location": {
+      "table": 15,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t15-r01-c01"
+  },
+  {
+    "id": "case-20260912-t15-r01-c02",
+    "title": "월경통 · 증례 65",
+    "kind": "cpx",
+    "cc_id": "40-2",
+    "source_location": {
+      "table": 15,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t15-r01-c02"
+  },
+  {
+    "id": "case-20260912-t15-r01-c03",
+    "title": "산전진찰 · 증례 66",
+    "kind": "cpx",
+    "cc_id": "41",
+    "source_location": {
+      "table": 15,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t15-r01-c03"
+  },
+  {
+    "id": "case-20260912-t15-r02-c01",
+    "title": "무월경 · 증례 67",
+    "kind": "cpx",
+    "cc_id": "40-1",
+    "source_location": {
+      "table": 15,
+      "row": 3,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t15-r02-c01"
+  },
+  {
+    "id": "case-20260912-t15-r02-c03",
+    "title": "산전진찰 · 증례 68",
+    "kind": "cpx",
+    "cc_id": "41",
+    "source_location": {
+      "table": 15,
+      "row": 3,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t15-r02-c03"
+  },
+  {
+    "id": "case-20260912-t16-r01-c01",
+    "title": "성장지연 · 증례 69",
+    "kind": "cpx",
+    "cc_id": "42",
+    "source_location": {
+      "table": 16,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t16-r01-c01"
+  },
+  {
+    "id": "case-20260912-t16-r01-c02",
+    "title": "발달지연 · 증례 70",
+    "kind": "cpx",
+    "cc_id": "42",
+    "source_location": {
+      "table": 16,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t16-r01-c02"
+  },
+  {
+    "id": "case-20260912-t16-r01-c03",
+    "title": "예방접종 · 증례 71",
+    "kind": "cpx",
+    "cc_id": "43",
+    "source_location": {
+      "table": 16,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t16-r01-c03"
+  },
+  {
+    "id": "case-20260912-t16-r02-c03",
+    "title": "예방접종 · 증례 72",
+    "kind": "cpx",
+    "cc_id": "43",
+    "source_location": {
+      "table": 16,
+      "row": 3,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t16-r02-c03"
+  },
+  {
+    "id": "case-20260912-t17-r01-c01",
+    "title": "자살 · 증례 73",
+    "kind": "cpx",
+    "cc_id": "48",
+    "source_location": {
+      "table": 17,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t17-r01-c01"
+  },
+  {
+    "id": "case-20260912-t17-r01-c02",
+    "title": "나소전 · 증례 74",
+    "kind": "cpx",
+    "cc_id": "46",
+    "source_location": {
+      "table": 17,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t17-r01-c02"
+  },
+  {
+    "id": "case-20260912-t17-r01-c03",
+    "title": "가정폭력 · 증례 75",
+    "kind": "cpx",
+    "cc_id": "47",
+    "source_location": {
+      "table": 17,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t17-r01-c03"
+  },
+  {
+    "id": "case-20260912-t17-r01-c04",
+    "title": "성폭력 · 증례 76",
+    "kind": "cpx",
+    "cc_id": "47",
+    "source_location": {
+      "table": 17,
+      "row": 2,
+      "column": 4
+    },
+    "source_case_id": "case-20260912-t17-r01-c04"
+  },
+  {
+    "id": "case-20260912-t17-r02-c01",
+    "title": "자살 · 증례 77",
+    "kind": "cpx",
+    "cc_id": "48",
+    "source_location": {
+      "table": 17,
+      "row": 3,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t17-r02-c01"
+  },
+  {
+    "id": "case-20260912-t17-r03-c01",
+    "title": "자살 · 증례 78",
+    "kind": "cpx",
+    "cc_id": "48",
+    "source_location": {
+      "table": 17,
+      "row": 4,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t17-r03-c01"
+  },
+  {
+    "id": "case-20260912-t17-r04-c01",
+    "title": "자살 · 증례 79",
+    "kind": "cpx",
+    "cc_id": "48",
+    "source_location": {
+      "table": 17,
+      "row": 5,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t17-r04-c01"
+  },
+  {
+    "id": "case-20260912-t18-r01-c01",
+    "title": "금주상담 · 증례 80",
+    "kind": "cpx",
+    "cc_id": "44-1",
+    "source_location": {
+      "table": 18,
+      "row": 2,
+      "column": 1
+    },
+    "source_case_id": "case-20260912-t18-r01-c01"
+  },
+  {
+    "id": "case-20260912-t18-r01-c02",
+    "title": "금연상담 · 증례 81",
+    "kind": "cpx",
+    "cc_id": "44-2",
+    "source_location": {
+      "table": 18,
+      "row": 2,
+      "column": 2
+    },
+    "source_case_id": "case-20260912-t18-r01-c02"
+  },
+  {
+    "id": "case-20260912-t18-r01-c03",
+    "title": "물질오남용 · 증례 82",
+    "kind": "cpx",
+    "cc_id": "45",
+    "source_location": {
+      "table": 18,
+      "row": 2,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t18-r01-c03"
+  },
+  {
+    "id": "case-20260912-t18-r02-c03",
+    "title": "물질오남용 · 증례 83",
+    "kind": "cpx",
+    "cc_id": "45",
+    "source_location": {
+      "table": 18,
+      "row": 3,
+      "column": 3
+    },
+    "source_case_id": "case-20260912-t18-r02-c03"
+  },
+  {
+    "id": "case-20260912-osce-01",
+    "title": "상처관리 · 증례 84",
+    "kind": "osce",
+    "cc_id": "osce",
+    "source_location": {
+      "table": 19,
+      "row": "2-3",
+      "column": 1
+    },
+    "source_case_id": "case-20260912-osce-01"
+  },
+  {
+    "id": "case-20260912-osce-02",
+    "title": "정맥+수혈 · 증례 85",
+    "kind": "osce",
+    "cc_id": "osce",
+    "source_location": {
+      "table": 19,
+      "row": "2-3",
+      "column": 2
+    },
+    "source_case_id": "case-20260912-osce-02"
+  },
+  {
+    "id": "case-20260912-osce-03",
+    "title": "동맥+수혈 · 증례 86",
+    "kind": "osce",
+    "cc_id": "osce",
+    "source_location": {
+      "table": 19,
+      "row": "2-3",
+      "column": 3
+    },
+    "source_case_id": "case-20260912-osce-03"
+  },
+  {
+    "id": "case-20260912-osce-04",
+    "title": "CPR+삽관 · 증례 87",
+    "kind": "osce",
+    "cc_id": "osce",
+    "source_location": {
+      "table": 19,
+      "row": "2-3",
+      "column": 4
+    },
+    "source_case_id": "case-20260912-osce-04"
   }
 ]
