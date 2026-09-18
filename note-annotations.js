@@ -62,43 +62,78 @@
     catch(error){active.root.innerHTML=expected;report('최신 수정본과 충돌하여 되돌리지 못했습니다. 새로고침해 주세요.',true);return true;}
   }
   function hydrateGuides() {
-    for(const id of ALL_IDS) {const root=document.getElementById('guide-'+id);if(root&&root.dataset.loaded){if(guideEdits[id]&&root.innerHTML!==guideEdits[id])root.innerHTML=guideEdits[id];rememberRevision(root,id,true);}}
-    const quiz=document.getElementById('quizGuide');if(quiz){if(guideEdits[activeQuizCardId]&&quiz.innerHTML!==guideEdits[activeQuizCardId])quiz.innerHTML=guideEdits[activeQuizCardId];rememberRevision(quiz,activeQuizCardId,true);}
+    function hydrate(root,id) {
+      if(!root)return;
+      const known=renderedRevision.get(root);
+      // Opening/closing a toggle must not replace an unsaved typing draft.
+      if(root.contentEditable==='true'&&known?.id===id)return;
+      if(Object.hasOwn(guideEdits,id)&&root.innerHTML!==guideEdits[id])root.innerHTML=guideEdits[id];
+      rememberRevision(root,id,true);
+    }
+    for(const id of ALL_IDS) {const root=document.getElementById('guide-'+id);if(root?.dataset.loaded)hydrate(root,id);}
+    hydrate(document.getElementById('quizGuide'),activeQuizCardId);
     wrapGuideImages();applyCropEdits();
   }
+  function setDetailEditing(id,quiz,enabled) {
+    if(!id?.startsWith('jam-'))return;
+    const root=document.getElementById(quiz?'quizGuide':'guide-'+id);
+    if(!root)return;
+    if(enabled&&root.style.display==='none') {if(quiz)toggleQuizGuide();else toggleGuide(id);}
+    root.contentEditable=String(enabled);root.classList.toggle('editing',enabled);
+    if(enabled)enableImageDrop(root);
+  }
   // Wrap only render boundaries; the app's existing drawing/editing/backup code stays intact.
-  const renderBase=renderQuizCard; renderQuizCard=function(...args){if(panel)closeComment();selected=null;toolbar.hidden=true;const r=renderBase(...args);const root=document.getElementById('quizAnsContent'),card=document.getElementById('ans-content-'+args[0]);if(root&&card&&renderedRevision.has(card))renderedRevision.set(root,{...renderedRevision.get(card)});else rememberRevision(root,args[0],false);hydrateGuides();return r;};
+  const renderBase=renderQuizCard; renderQuizCard=function(...args){flushEditableChangesForBackup();if(panel)closeComment();selected=null;toolbar.hidden=true;const r=renderBase(...args);const root=document.getElementById('quizAnsContent'),card=document.getElementById('ans-content-'+args[0]);if(root&&card&&renderedRevision.has(card))renderedRevision.set(root,{...renderedRevision.get(card)});else rememberRevision(root,args[0],false);hydrateGuides();return r;};
   const guideBase=toggleGuide; toggleGuide=function(...args){const r=guideBase(...args);hydrateGuides();return r;};
   const quizGuideBase=toggleQuizGuide; toggleQuizGuide=function(...args){const r=quizGuideBase(...args);hydrateGuides();return r;};
   const applyEditsBase=applyEdits;applyEdits=function(...args){const r=applyEditsBase(...args);ALL_IDS.forEach(id=>rememberRevision(document.getElementById('ans-content-'+id),id,false));return r;};
   function saveFailure(error){report(error.code==='ANNOTATION_CONFLICT'?'다른 탭의 최신 수정본이 있습니다. 현재 입력을 복사한 뒤 새로고침해 주세요.':'저장하지 못했습니다. 저장공간을 확인해 주세요.',true);}
-  saveEdit=function(id){const root=document.getElementById('ans-content-'+id);try{persist({root,id,guide:false});root.contentEditable='false';root.classList.remove('editing');removeEditToolbar(id);document.getElementById('save-'+id).style.display='none';}catch(error){saveFailure(error);}};
+  const toggleEditBase=toggleEdit;
+  toggleEdit=function(id){
+    const root=document.getElementById('ans-content-'+id),closing=root?.contentEditable==='true';
+    if(closing){saveEdit(id);return;}
+    toggleEditBase(id);setDetailEditing(id,false,true);
+  };
+  saveEdit=function(id){
+    const root=document.getElementById('ans-content-'+id);
+    try{flushEditableChangesForBackup();root.contentEditable='false';root.classList.remove('editing');setDetailEditing(id,false,false);removeEditToolbar(id);document.getElementById('save-'+id).style.display='none';report('수정 내용 저장됨');}catch(error){saveFailure(error);}
+  };
   const toggleQuizEditBase=toggleQuizEdit;toggleQuizEdit=function(id){
     const root=document.getElementById('quizAnsContent'),closing=root?.contentEditable==='true';
-    if(!closing)return toggleQuizEditBase(id);
-    try{persist({root,id,guide:false});root.contentEditable='false';root.classList.remove('editing');removeEditToolbar('quiz-'+id);setTimeout(()=>showQuizStaticDraw(id),30);}catch(error){saveFailure(error);}
+    if(!closing){toggleQuizEditBase(id);setDetailEditing(id,true,true);return;}
+    try{flushEditableChangesForBackup();root.contentEditable='false';root.classList.remove('editing');setDetailEditing(id,true,false);removeEditToolbar('quiz-'+id);setTimeout(()=>showQuizStaticDraw(id),30);report('수정 내용 저장됨');}catch(error){saveFailure(error);}
   };
   // The old backup helper always wrote its entire in-memory edits object, even
   // with no open editor. Flush only actual dirty roots into the latest store.
   flushEditableChangesForBackup=function(){
     if(window.MTLStorageRestoreInProgress)return;
     const dirty=new Map();
-    function addDirty(root,id){
+    function addDirty(root,id,guide=false){
       if(root?.contentEditable!=='true'||root.innerHTML===renderedRevision.get(root)?.html)return;
-      const previous=dirty.get(id);
-      if(previous&&previous.root.innerHTML!==root.innerHTML){const error=new Error('같은 답안의 두 편집창에 서로 다른 미저장 입력이 있습니다. 두 입력을 보존하고 먼저 정리해 주세요.');error.code='ANNOTATION_CONFLICT';saveFailure(error);throw error;}
-      dirty.set(id,{root,id,guide:false});
+      const key=(guide?'guide:':'answer:')+id,previous=dirty.get(key);
+      if(previous&&previous.root.innerHTML!==root.innerHTML){const error=new Error('같은 내용의 두 편집창에 서로 다른 미저장 입력이 있습니다.');error.code='ANNOTATION_CONFLICT';saveFailure(error);throw error;}
+      dirty.set(key,{root,id,guide});
     }
-    ALL_IDS.forEach(id=>addDirty(document.getElementById('ans-content-'+id),id));
-    if(activeQuizCardId)addDirty(document.getElementById('quizAnsContent'),activeQuizCardId);
-    const latest=loadContentMap(EDITS_KEY);
-    for(const target of dirty.values()){const known=renderedRevision.get(target.root);if(!known||latest[target.id]!==known.value){const error=new Error('다른 탭에서 수정된 답안이 있습니다. 현재 입력을 보존하고 새로고침해 주세요.');error.code='ANNOTATION_CONFLICT';saveFailure(error);throw error;}latest[target.id]=target.root.innerHTML;}
-    if(dirty.size)saveContentMap(EDITS_KEY,latest);edits=latest;
+    ALL_IDS.forEach(id=>{addDirty(document.getElementById('ans-content-'+id),id);addDirty(document.getElementById('guide-'+id),id,true);});
+    for(const [key,guide] of [['quizAnsContent',false],['quizGuide',true]]){const root=document.getElementById(key),known=renderedRevision.get(root);if(known)addDirty(root,known.id,guide);}
+    const answers=loadContentMap(EDITS_KEY),guides=loadContentMap(GUIDE_KEY);
+    // Validate every surface before writing either store. Preserve other-tab edits.
     for(const target of dirty.values()){
-      const ids=['ans-content-'+target.id,...(activeQuizCardId===target.id?['quizAnsContent']:[])];
-      ids.forEach(id=>{const root=document.getElementById(id);if(root){if(root!==target.root)root.innerHTML=target.root.innerHTML;rememberRevision(root,target.id,false);}});
+      const known=renderedRevision.get(target.root),latest=target.guide?guides:answers;
+      if(!known||known.id!==target.id||latest[target.id]!==known.value){const error=new Error('다른 탭에서 수정된 내용이 있습니다. 현재 입력을 보존하고 새로고침해 주세요.');error.code='ANNOTATION_CONFLICT';saveFailure(error);throw error;}
+      latest[target.id]=target.root.innerHTML;
+    }
+    if([...dirty.values()].some(t=>!t.guide))saveContentMap(EDITS_KEY,answers);
+    if([...dirty.values()].some(t=>t.guide))saveContentMap(GUIDE_KEY,guides);
+    edits=answers;guideEdits=guides;
+    for(const target of dirty.values()){
+      const ids=target.guide?['guide-'+target.id,...(renderedRevision.get(document.getElementById('quizGuide'))?.id===target.id?['quizGuide']:[])]:['ans-content-'+target.id,...(renderedRevision.get(document.getElementById('quizAnsContent'))?.id===target.id?['quizAnsContent']:[])];
+      ids.forEach(id=>{const root=document.getElementById(id);if(root&&(!target.guide||root.dataset.loaded||id==='quizGuide')){if(root!==target.root)root.innerHTML=target.root.innerHTML;rememberRevision(root,target.id,target.guide);}});
     }
   };
+  // Save ongoing typing on reload as well as explicit save/backup/navigation.
+  window.addEventListener('pagehide',()=>{try{flushEditableChangesForBackup();}catch(error){saveFailure(error);}});
+  window.addEventListener('beforeunload',()=>{try{flushEditableChangesForBackup();}catch(error){saveFailure(error);}});
   function captureSelection() {
     if(panel || toolbar.contains(document.activeElement)) return;
     const selection=window.getSelection();
