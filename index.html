@@ -734,7 +734,7 @@ body.quiz-mode-active .mobile-review-start { display: none !important; }
                 <button type="button" id="btnExportBackup" onclick="exportBackup()">📤 수정본<br>내보내기</button>
                 <button type="button" id="btnImportBackup" onclick="document.getElementById('backupFileInput').click()">📥 수정본<br>불러오기</button>
                 <input type="file" id="backupFileInput" accept="application/json,.json" hidden onchange="importBackupFile(this.files &amp;&amp; this.files[0]); this.value=''">
-                <div class="backup-help">해설·자기답안·학습기록·날짜별 CC 선택·랜덤 세션·필기/이미지 편집을 JSON 파일로 옮깁니다.</div>
+                <div class="backup-help">해설·자기답안·학습기록·날짜별 CC·공통대본 선택·랜덤 세션·필기/이미지 편집을 JSON 파일로 옮깁니다.</div>
             </div>
         </div>
         <div style="margin-top:12px;">
@@ -746,7 +746,7 @@ body.quiz-mode-active .mobile-review-start { display: none !important; }
 <div class="main" id="mainContent">
     
     <section class="case-intro"><div class="case-kicker">MTL PRACTICAL · JAM CASE EDUCATION</div><h1>CC 암기와 증례 연습, 함께.</h1><p class="mtl-note">MTL CC 61개 · 공통 양식 17개 · OSCE 4개와 함께 공부합니다.<br>잼얘 83증례: CC·질환·키포인트를 보고 환자교육을 연습하세요.</p><nav class="collection-entry" aria-label="학습 자료 선택"><a href="?mode=original" data-study-scope="original"><strong>기존 CC 암기</strong><span>CC 61 + 공통 양식 17 · 원문 전체</span></a><a href="?mode=cases" data-study-scope="cases"><strong>잼얘 환자교육 연습</strong><span>83증례 · 환자교육과 표형 복기 전문</span></a></nav><div class="case-chips"><button data-study-scope="all">전체 165</button><button data-study-scope="original">CC 암기·공통 78</button><button data-study-scope="cases">CPX 증례 83</button><button data-study-scope="osce">OSCE 4</button></div>
-<div class="cc-practice-entry"><button type="button" id="ccPracticeOpen" data-cc-practice-open>선택한 CC로 암기</button><span>날짜별 체크리스트 · 선택한 CC만 랜덤 퀴즈</span></div>
+<div class="cc-practice-entry"><button type="button" id="ccPracticeOpen" data-cc-practice-open>선택한 CC로 암기</button><span>날짜별 체크리스트 · CC·공통대본 중 선택한 항목만 랜덤 퀴즈</span></div>
 <div class="study-controls" id="studyControls"><div class="case-filter-row"><label>복습 범위<select id="studyScope"><option value="all">전체</option><option value="original">CC 암기·공통 양식</option><option value="cases">CPX 증례</option><option value="osce">OSCE 술기</option></select></label><label>증례 CC<select id="caseCc"><option value="">모든 CC</option><option value="가슴통증">가슴통증</option><option value="두근거림">두근거림</option><option value="실신">실신</option><option value="급성복통">급성복통</option><option value="만성복통/소화불량">만성복통/소화불량</option><option value="구토">구토</option><option value="황달">황달</option><option value="설사">설사</option><option value="토혈">토혈</option><option value="혈변">혈변</option><option value="호흡곤란">호흡곤란</option><option value="기침">기침</option><option value="콧물/코막힘">콧물/코막힘</option><option value="객혈">객혈</option><option value="다뇨">다뇨</option><option value="핍뇨">핍뇨</option><option value="혈뇨">혈뇨</option><option value="빈뇨">빈뇨</option><option value="고혈압">고혈압</option><option value="이상지질혈증">이상지질혈증</option><option value="피로">피로</option><option value="체중감소">체중감소</option><option value="체중증가">체중증가</option><option value="발열">발열</option><option value="쉽게멍">쉽게멍</option><option value="피부발진">피부발진</option><option value="관절통/부기">관절통/부기</option><option value="목통증">목통증</option><option value="허리통증">허리통증</option><option value="어지럼">어지럼</option><option value="두통">두통</option><option value="경련">경련</option><option value="근력/감각이상">근력/감각이상</option><option value="떨림/운동이상">떨림/운동이상</option><option value="의식장애">의식장애</option><option value="기분변화">기분변화</option><option value="수면장애">수면장애</option><option value="기억력저하">기억력저하</option><option value="불안">불안</option><option value="유방덩이/유방통">유방덩이/유방통</option><option value="질분비물">질분비물</option><option value="질출혈(월경과다)">질출혈(월경과다)</option><option value="무월경">무월경</option><option value="월경통">월경통</option><option value="산전진찰">산전진찰</option><option value="성장지연">성장지연</option><option value="발달지연">발달지연</option><option value="예방접종">예방접종</option><option value="자살">자살</option><option value="나소전">나소전</option><option value="가정폭력">가정폭력</option><option value="성폭력">성폭력</option><option value="금주상담">금주상담</option><option value="금연상담">금연상담</option><option value="물질오남용">물질오남용</option></select></label><label>앞면 검색<input id="caseSearch" type="search" placeholder="CC 또는 증례 속 표현"></label></div><p class="mtl-note" id="caseFilterCount" role="status"></p><div class="case-start-row"><button id="caseStartOrdered" data-start-review="1" data-order="ordered">선택 범위 순서대로</button><button id="caseStartRandom" data-start-review="1" data-order="random">선택 범위 랜덤</button></div></div>
 <div class="case-links"><a href="detail/full-table-source.pdf" target="_blank" rel="noopener">표형 복기 원본 PDF</a><a href="MTL-CC.apkg" download>기존 MTL 덱</a><a href="original.docx" download>기존 MTL Word</a></div><p class="mtl-note">잼얘 증례로 환자교육을 연습한 뒤 정답과 원문을 확인하세요. 전문 대응 확인 75개 · 관련 복기만 있는 증례 6개 · 원본 미확인 2개. 관련 복기는 동일 환자로 확정하지 않았습니다.</p></section><div id="caseEmpty" class="case-empty" hidden>해당하는 카드가 없습니다. 범위나 검색어를 바꿔보세요.</div><div class="card-grid">
         
@@ -4566,7 +4566,7 @@ function startQuizWith(ids, options = {}) {
     quizOrderMode = options.orderMode === 'random' ? 'random' : 'ordered';
     const modeBadge = document.getElementById('quizOrderModeBadge');
     if (modeBadge) modeBadge.textContent = quizOrderMode === 'random' ? '🔀 랜덤' : '↕ 순서';
-    if (modeBadge && ccPracticeSession) modeBadge.textContent = `${ccPracticeSession.date} · 선택 CC ${ccPracticeSession.ids.length}개 · 랜덤`;
+    if (modeBadge && ccPracticeSession) modeBadge.textContent = `${ccPracticeSession.date} · 선택 ${ccPracticeSession.ids.length}개 · 랜덤`;
     document.getElementById('undoBtn').disabled = ccPracticeSession ? !ccPracticeHistory.length : !history.length;
     bonusMode = Boolean(options.bonusMode);
     bonusSrs = bonusMode && options.bonusSrs && typeof options.bonusSrs === 'object' ? options.bonusSrs : {};
@@ -4655,7 +4655,7 @@ function renderQuizCard(id) {
     else if (s.mastered) badge = '<span style="background:rgba(255,212,59,.2);color:#ffd43b;padding:1px 6px;border-radius:4px;font-size:11px;font-weight:700">😊 숙달</span>';
     else if (s.redCount >= 2) badge = '<span style="background:rgba(255,107,107,.2);color:#ff6b6b;padding:1px 6px;border-radius:4px;font-size:11px;font-weight:700">🤬 어려움</span>';
 
-    if (ccPracticeSession) badge = '<span class="cc-practice-session-label">선택 CC 연습 · 복습 일정 유지</span>';
+    if (ccPracticeSession) badge = '<span class="cc-practice-session-label">선택 연습 · 복습 일정 유지</span>';
     const curStreak = bonusMode ? (bonusSrs[id]?.greenStreak || 0) : s.greenStreak;
     const greenLabel = curStreak >= 1 ? `🟢 숙달<br><small>${ccPracticeSession ? '이번 연습 완료' : '내일'}</small>` : '🟢 보통<br><small>10분</small>';
 
@@ -5271,7 +5271,7 @@ function renderComplete() {
     if (ccPracticeSession) {
         const practice = structuredClone(ccPracticeSession);
         document.getElementById('quizRemainingBadge').textContent = '남음 0';
-        document.getElementById('quizBody').innerHTML = `<div class="session-complete"><h2>선택한 CC 연습 완료!</h2><p>${practice.date} · ${practice.ids.length}개 CC</p><p>기존 복습 일정은 그대로 유지됩니다.</p><p><button type="button" class="cc-practice-restart" id="ccPracticeRepeat">같은 CC 다시 섞기</button></p><p><button type="button" class="back-btn" id="ccPracticeReselect">날짜·CC 다시 선택</button></p><p><button class="back-btn" onclick="exitQuiz()">← 카드 뷰로 돌아가기</button></p></div>`;
+        document.getElementById('quizBody').innerHTML = `<div class="session-complete"><h2>선택한 항목 연습 완료!</h2><p>${practice.date} · ${practice.ids.length}개 항목</p><p>기존 복습 일정은 그대로 유지됩니다.</p><p><button type="button" class="cc-practice-restart" id="ccPracticeRepeat">같은 항목 다시 섞기</button></p><p><button type="button" class="back-btn" id="ccPracticeReselect">날짜·항목 다시 선택</button></p><p><button class="back-btn" onclick="exitQuiz()">← 카드 뷰로 돌아가기</button></p></div>`;
         document.getElementById('ccPracticeRepeat').addEventListener('click', () => window.MTLCCPractice.launch(practice));
         document.getElementById('ccPracticeReselect').addEventListener('click', () => window.MTLCCPractice.open(practice.date));
         return;

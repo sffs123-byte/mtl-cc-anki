@@ -23,6 +23,8 @@ body.cc-picker-open { overflow:hidden; }
 .cc-picker-list label { display:flex; align-items:center; gap:8px; min-height:46px; padding:8px 10px; border:1px solid var(--card-border); border-radius:9px; cursor:pointer; font-size:14px; }
 .cc-picker-list label:has(input:checked) { border-color:var(--accent); background:color-mix(in srgb,var(--accent) 10%,var(--card-bg)); }
 .cc-picker-list label[hidden] { display:none; }
+.cc-picker-group-title { grid-column:1 / -1; margin:6px 0 2px; font-size:15px; color:var(--accent); }
+.cc-picker-group-title[hidden] { display:none; }
 .cc-picker-list input { width:20px; height:20px; accent-color:var(--accent); flex-shrink:0; }
 .cc-picker-list small { color:var(--text-dim); }
 .cc-picker-foot { flex-shrink:0; padding:10px 20px 16px; border-top:1px solid var(--card-border); }

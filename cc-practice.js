@@ -1,9 +1,11 @@
-/* Date-specific free practice. CC IDs are not case numbers or source-table IDs. */
+/* Date-specific CC + common-script practice. Case/OSCE IDs are excluded. */
 (() => {
   'use strict';
   const prefix = 'mtl_cc_20260907_cc_practice_date_v1_';
   const ccIds = Array.from({length:61}, (_, i) => 'c' + (i + 1));
-  const allowed = new Set(ccIds);
+  const commonIds = Array.from({length:17}, (_, i) => 'c' + (i + 62));
+  const practiceIds = [...ccIds, ...commonIds];
+  const allowed = new Set(practiceIds);
   let dialog, dateInput, search, list, count, status, start, savedDates;
   let activeDate = '', selected = new Set(), returnFocus = null;
   const key = date => prefix + date;
@@ -17,7 +19,7 @@
     return !Number.isNaN(d.getTime()) && d.getFullYear() === Number(value.slice(0,4)) &&
       d.getMonth()+1 === Number(value.slice(5,7)) && d.getDate() === Number(value.slice(8));
   }
-  function cleanIds(ids) { return Array.isArray(ids) ? ccIds.filter(id => ids.includes(id) && QUIZ_DATA[id]) : []; }
+  function cleanIds(ids) { return Array.isArray(ids) ? practiceIds.filter(id => ids.includes(id) && QUIZ_DATA[id]) : []; }
   function normalize(value) {
     if (!value || !validDate(value.date)) return null;
     const ids = cleanIds(value.ids);
@@ -54,7 +56,11 @@
       box.checked = selected.has(box.dataset.ccId);
     });
     document.getElementById('ccPracticeEmpty').hidden = visible > 0;
-    count.textContent = `${selected.size} / ${ccIds.length} CC 선택`;
+    list.querySelectorAll('.cc-picker-group-title').forEach(heading => {
+      heading.hidden = !list.querySelector(`label[data-group="${heading.dataset.group}"]:not([hidden])`);
+    });
+    const commonCount = commonIds.filter(id => selected.has(id)).length;
+    count.textContent = `CC ${selected.size - commonCount}개 · 공통대본 ${commonCount}개 선택`;
     start.textContent = `선택한 ${selected.size}개로 랜덤 시작`;
     start.disabled = !selected.size || !validDate(activeDate);
     document.getElementById('ccPracticeSelectAll').textContent = query ? '검색 결과 모두 선택' : '전체 선택';
@@ -62,7 +68,7 @@
   function loadDate(date) {
     if (!validDate(date)) { dateInput.value = activeDate; message('올바른 연습 날짜를 선택해 주세요.', true); return; }
     activeDate = date; dateInput.value = date;
-    try { selected = new Set(read(date)); message(selected.size ? '저장한 선택을 불러왔어요. 변경하면 자동 저장됩니다.' : 'CC를 체크하면 이 날짜에 자동 저장됩니다.'); }
+    try { selected = new Set(read(date)); message(selected.size ? '저장한 선택을 불러왔어요. 변경하면 자동 저장됩니다.' : 'CC·공통대본을 체크하면 이 날짜에 자동 저장됩니다.'); }
     catch (_) { selected = new Set(); message('이 날짜의 선택을 읽지 못했어요. 다시 선택해 저장하거나 백업을 복원해 주세요.', true); }
     render(); refreshDates();
   }
@@ -106,19 +112,27 @@
   window.addEventListener('DOMContentLoaded', () => {
     dialog = document.createElement('dialog'); dialog.id = 'ccPracticeDialog';
     dialog.setAttribute('aria-labelledby','ccPracticeTitle');
-    dialog.innerHTML = `<div class="cc-picker-head"><div><h2 id="ccPracticeTitle">선택한 CC로 암기</h2><p>날짜별로 골라서, 고른 CC만 랜덤으로.</p></div><button type="button" id="ccPracticeClose" aria-label="CC 선택 닫기">✕</button></div>
-      <div class="cc-picker-controls"><label>연습 날짜<input id="ccPracticeDate" type="date" required></label><label>저장한 목록<select id="ccPracticeSavedDates"></select></label><label class="cc-picker-search">CC 검색<input id="ccPracticeSearch" type="search" placeholder="예: 복통, 기침, 혈뇨" autocomplete="off"></label><div class="cc-picker-actions"><button type="button" id="ccPracticeSelectAll">전체 선택</button><button type="button" id="ccPracticeClear">전체 선택 해제</button><strong id="ccPracticeCount" role="status"></strong></div></div>
-      <div id="ccPracticeList" class="cc-picker-list" role="group" aria-label="연습할 CC 체크리스트"></div><p id="ccPracticeEmpty" hidden>검색 결과가 없어요. 다른 CC 이름을 입력해 보세요.</p>
-      <div class="cc-picker-foot"><p id="ccPracticeStatus" role="status" aria-live="polite"></p><p class="cc-picker-help">공통대본·증례 제외 · 이미 외운 CC도 연습 가능<br>기존 복습 일정은 바꾸지 않습니다. 선택 목록은 이 브라우저에 저장되며 백업에 포함됩니다.</p><button type="button" id="ccPracticeStart" disabled>선택한 0개로 랜덤 시작</button></div>`;
+    dialog.innerHTML = `<div class="cc-picker-head"><div><h2 id="ccPracticeTitle">선택한 CC로 암기</h2><p>CC와 공통대본을 날짜별로 골라, 선택한 항목만 랜덤으로.</p></div><button type="button" id="ccPracticeClose" aria-label="CC·공통대본 선택 닫기">✕</button></div>
+      <div class="cc-picker-controls"><label>연습 날짜<input id="ccPracticeDate" type="date" required></label><label>저장한 목록<select id="ccPracticeSavedDates"></select></label><label class="cc-picker-search">CC·공통대본 검색<input id="ccPracticeSearch" type="search" placeholder="예: 복통, 기침, 공통" autocomplete="off"></label><div class="cc-picker-actions"><button type="button" id="ccPracticeSelectAll">전체 선택</button><button type="button" id="ccPracticeClear">전체 선택 해제</button><strong id="ccPracticeCount" role="status"></strong></div></div>
+      <div id="ccPracticeList" class="cc-picker-list" role="group" aria-label="연습할 CC·공통대본 체크리스트"></div><p id="ccPracticeEmpty" hidden>검색 결과가 없어요. 다른 이름을 입력해 보세요.</p>
+      <div class="cc-picker-foot"><p id="ccPracticeStatus" role="status" aria-live="polite"></p><p class="cc-picker-help">CC 61개 + 공통대본 17개 · 증례·OSCE 제외 · 이미 외운 항목도 연습 가능<br>기존 복습 일정은 바꾸지 않습니다. 선택 목록은 이 브라우저에 저장되며 백업에 포함됩니다.</p><button type="button" id="ccPracticeStart" disabled>선택한 0개로 랜덤 시작</button></div>`;
     document.body.append(dialog);
     dateInput = document.getElementById('ccPracticeDate'); search = document.getElementById('ccPracticeSearch');
     list = document.getElementById('ccPracticeList'); count = document.getElementById('ccPracticeCount');
     status = document.getElementById('ccPracticeStatus'); start = document.getElementById('ccPracticeStart');
     savedDates = document.getElementById('ccPracticeSavedDates');
-    ccIds.forEach(id => {
+    practiceIds.forEach(id => {
+      const group = commonIds.includes(id) ? 'common' : 'cc';
+      if (id === ccIds[0] || id === commonIds[0]) {
+        const heading = document.createElement('h3');
+        heading.className = 'cc-picker-group-title'; heading.dataset.group = group;
+        heading.textContent = group === 'common' ? '공통대본 · 17개' : 'CC별 대본 · 61개';
+        list.append(heading);
+      }
       const title = document.createElement('div'); title.innerHTML = QUIZ_DATA[id].q;
       const text = title.textContent.trim();
-      const row = document.createElement('label'); row.dataset.search = (id.slice(1)+' '+text).toLocaleLowerCase().replace(/\s/g,'');
+      const row = document.createElement('label'); row.dataset.group = group;
+      row.dataset.search = (id.slice(1)+' '+(group === 'common' ? '공통대본 ' : 'CC별 대본 ')+text).toLocaleLowerCase().replace(/\s/g,'');
       const box = document.createElement('input'); box.type = 'checkbox'; box.dataset.ccId = id;
       const name = document.createElement('span'); name.textContent = text;
       const number = document.createElement('small'); number.textContent = id.slice(1).padStart(2,'0');
