@@ -1,0 +1,44 @@
+.cc-practice-entry { margin:14px 0; display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
+.cc-practice-entry button, .cc-practice-restart { background:var(--accent); color:#fff; border:0; border-radius:10px; padding:13px 18px; font-size:15px; font-weight:700; cursor:pointer; }
+.cc-practice-entry span { color:var(--text-dim); font-size:13px; }
+.sb-quiz-btns .cc-practice-open { background:var(--accent); color:#fff; }
+body.cc-picker-open { overflow:hidden; }
+#ccPracticeDialog { box-sizing:border-box; margin:auto; width:min(720px,calc(100% - 24px)); max-width:calc(100% - 12px); max-height:90vh; max-height:90dvh; padding:0; border:1px solid var(--card-border); border-radius:18px; background:var(--card-bg); color:var(--text); box-shadow:0 24px 80px #0005; }
+#ccPracticeDialog[open] { display:flex; flex-direction:column; }
+#ccPracticeDialog::backdrop { background:#142035a8; }
+#ccPracticeDialog * { box-sizing:border-box; }
+.cc-picker-head { display:flex; gap:12px; align-items:flex-start; justify-content:space-between; padding:18px 20px 12px; }
+.cc-picker-head h2 { margin:0 0 5px; font-size:21px; }
+.cc-picker-head p { margin:0; color:var(--text-dim); font-size:13px; }
+#ccPracticeDialog button, #ccPracticeDialog input, #ccPracticeDialog select { font:inherit; }
+#ccPracticeDialog button { cursor:pointer; min-height:42px; border:1px solid var(--card-border); border-radius:8px; background:var(--bg); color:var(--text); padding:8px 12px; }
+#ccPracticeDialog button:focus-visible, #ccPracticeDialog input:focus-visible, #ccPracticeDialog select:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+.cc-picker-controls { padding:0 20px 12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; border-bottom:1px solid var(--card-border); }
+.cc-picker-controls label { display:flex; flex-direction:column; gap:5px; font-size:13px; min-width:0; }
+.cc-picker-controls input, .cc-picker-controls select { min-width:0; width:100%; min-height:42px; padding:8px; color:var(--text); background:var(--bg); border:1px solid var(--card-border); border-radius:8px; }
+.cc-picker-controls .cc-picker-search, .cc-picker-actions { grid-column:1 / -1; }
+.cc-picker-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.cc-picker-actions strong { margin-left:auto; color:var(--accent); font-size:13px; }
+.cc-picker-list { overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; min-height:72px; flex:1 1 auto; display:grid; grid-template-columns:1fr 1fr; gap:7px; padding:12px 20px; }
+.cc-picker-list label { display:flex; align-items:center; gap:8px; min-height:46px; padding:8px 10px; border:1px solid var(--card-border); border-radius:9px; cursor:pointer; font-size:14px; }
+.cc-picker-list label:has(input:checked) { border-color:var(--accent); background:color-mix(in srgb,var(--accent) 10%,var(--card-bg)); }
+.cc-picker-list label[hidden] { display:none; }
+.cc-picker-list input { width:20px; height:20px; accent-color:var(--accent); flex-shrink:0; }
+.cc-picker-list small { color:var(--text-dim); }
+.cc-picker-foot { flex-shrink:0; padding:10px 20px 16px; border-top:1px solid var(--card-border); }
+.cc-picker-foot p { margin:0 0 7px; font-size:12px; line-height:1.45; }
+.cc-picker-help { color:var(--text-dim); }
+#ccPracticeStatus { color:var(--accent); min-height:18px; }
+#ccPracticeStatus.is-error { color:var(--red,#d00); }
+#ccPracticeDialog #ccPracticeStart { width:100%; background:var(--accent); color:white; border:0; font-weight:700; min-height:46px; }
+#ccPracticeStart:disabled { opacity:.45; cursor:not-allowed; }
+#ccPracticeEmpty { text-align:center; font-size:14px; }
+.cc-practice-session-label { color:var(--accent); font-size:12px; }
+@media(max-width:480px) {
+  #ccPracticeDialog { width:calc(100% - 12px); max-height:94vh; max-height:94dvh; border-radius:12px; }
+  .cc-picker-head { padding:14px 12px 10px; }
+  .cc-picker-controls { padding:0 12px 10px; gap:8px; }
+  .cc-picker-list { padding:10px 12px; grid-template-columns:1fr; }
+  .cc-picker-foot { padding:10px 12px; }
+  .cc-picker-actions strong { width:100%; margin-left:0; }
+}
