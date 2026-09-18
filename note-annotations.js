@@ -8,7 +8,7 @@
   const HIGHLIGHTS = [['노랑','#fff3b0'],['주황','#ffe0bf'],['빨강','#ffd6d9']];
   const COMMENT_PREFIX = 'data-note-comment-';
   let guideEdits = {};
-  try { guideEdits = JSON.parse(localStorage.getItem(GUIDE_KEY) || '{}'); } catch (_) {}
+  try { guideEdits = loadContentMap(GUIDE_KEY); } catch (_) {}
   let selected = null, panel = null;
   const undoStack=[],redoStack=[];
   // The displayed root's own revision, not the merged whole-storage object.
@@ -38,12 +38,13 @@
   }
   function persist(target) {
     const {root,id,guide}=target, html=root.innerHTML;
-    const latest=JSON.parse(localStorage.getItem(guide?GUIDE_KEY:EDITS_KEY)||'{}');
+    const latest=loadContentMap(guide?GUIDE_KEY:EDITS_KEY);
     const known=renderedRevision.get(root);
     if(!known||known.id!==id||known.guide!==guide||latest[id]!==known.value) {const error=new Error('This answer was changed in another tab. Reload before annotating.');error.code='ANNOTATION_CONFLICT';throw error;}
-    if(guide) { const next={...latest,[id]:html}; localStorage.setItem(GUIDE_KEY,JSON.stringify(next)); guideEdits=next; }
-    else { const previous=edits; edits={...latest,[id]:html}; try {saveEdits();} catch(e){edits=previous;throw e;} }
     const ids=guide?['guide-'+id, ...(activeQuizCardId===id?['quizGuide']:[])]:['ans-content-'+id,...(activeQuizCardId===id?['quizAnsContent']:[])];
+    for(const key of ids){const other=document.getElementById(key);if(other&&other!==root&&other.contentEditable==='true'&&other.innerHTML!==renderedRevision.get(other)?.html&&other.innerHTML!==html){const error=new Error('This answer has different unsaved changes in another editor.');error.code='ANNOTATION_CONFLICT';throw error;}}
+    if(guide) { const next={...latest,[id]:html}; saveContentMap(GUIDE_KEY,next); guideEdits=next; }
+    else { const previous=edits; edits={...latest,[id]:html}; try {saveEdits();} catch(e){edits=previous;throw e;} }
     ids.forEach(key=>{const other=document.getElementById(key);if(other&&(!guide||other.dataset.loaded||key==='quizGuide')){if(other!==root)other.innerHTML=html;rememberRevision(other,id,guide);}});
     report('서식·댓글 저장됨');
   }
@@ -63,6 +64,7 @@
   function hydrateGuides() {
     for(const id of ALL_IDS) {const root=document.getElementById('guide-'+id);if(root&&root.dataset.loaded){if(guideEdits[id]&&root.innerHTML!==guideEdits[id])root.innerHTML=guideEdits[id];rememberRevision(root,id,true);}}
     const quiz=document.getElementById('quizGuide');if(quiz){if(guideEdits[activeQuizCardId]&&quiz.innerHTML!==guideEdits[activeQuizCardId])quiz.innerHTML=guideEdits[activeQuizCardId];rememberRevision(quiz,activeQuizCardId,true);}
+    wrapGuideImages();applyCropEdits();
   }
   // Wrap only render boundaries; the app's existing drawing/editing/backup code stays intact.
   const renderBase=renderQuizCard; renderQuizCard=function(...args){if(panel)closeComment();selected=null;toolbar.hidden=true;const r=renderBase(...args);const root=document.getElementById('quizAnsContent'),card=document.getElementById('ans-content-'+args[0]);if(root&&card&&renderedRevision.has(card))renderedRevision.set(root,{...renderedRevision.get(card)});else rememberRevision(root,args[0],false);hydrateGuides();return r;};
@@ -79,12 +81,19 @@
   // The old backup helper always wrote its entire in-memory edits object, even
   // with no open editor. Flush only actual dirty roots into the latest store.
   flushEditableChangesForBackup=function(){
+    if(window.MTLStorageRestoreInProgress)return;
     const dirty=new Map();
-    ALL_IDS.forEach(id=>{const root=document.getElementById('ans-content-'+id);if(root?.contentEditable==='true'&&root.innerHTML!==renderedRevision.get(root)?.html)dirty.set(id,{root,id,guide:false});});
-    const quiz=document.getElementById('quizAnsContent');if(activeQuizCardId&&quiz?.contentEditable==='true'&&quiz.innerHTML!==renderedRevision.get(quiz)?.html)dirty.set(activeQuizCardId,{root:quiz,id:activeQuizCardId,guide:false});
-    const latest=JSON.parse(localStorage.getItem(EDITS_KEY)||'{}');
+    function addDirty(root,id){
+      if(root?.contentEditable!=='true'||root.innerHTML===renderedRevision.get(root)?.html)return;
+      const previous=dirty.get(id);
+      if(previous&&previous.root.innerHTML!==root.innerHTML){const error=new Error('같은 답안의 두 편집창에 서로 다른 미저장 입력이 있습니다. 두 입력을 보존하고 먼저 정리해 주세요.');error.code='ANNOTATION_CONFLICT';saveFailure(error);throw error;}
+      dirty.set(id,{root,id,guide:false});
+    }
+    ALL_IDS.forEach(id=>addDirty(document.getElementById('ans-content-'+id),id));
+    if(activeQuizCardId)addDirty(document.getElementById('quizAnsContent'),activeQuizCardId);
+    const latest=loadContentMap(EDITS_KEY);
     for(const target of dirty.values()){const known=renderedRevision.get(target.root);if(!known||latest[target.id]!==known.value){const error=new Error('다른 탭에서 수정된 답안이 있습니다. 현재 입력을 보존하고 새로고침해 주세요.');error.code='ANNOTATION_CONFLICT';saveFailure(error);throw error;}latest[target.id]=target.root.innerHTML;}
-    if(dirty.size)localStorage.setItem(EDITS_KEY,JSON.stringify(latest));edits=latest;
+    if(dirty.size)saveContentMap(EDITS_KEY,latest);edits=latest;
     for(const target of dirty.values()){
       const ids=['ans-content-'+target.id,...(activeQuizCardId===target.id?['quizAnsContent']:[])];
       ids.forEach(id=>{const root=document.getElementById(id);if(root){if(root!==target.root)root.innerHTML=target.root.innerHTML;rememberRevision(root,target.id,false);}});
@@ -261,6 +270,6 @@
     box.append(content);box.querySelectorAll('*').forEach(el=>[...el.attributes].forEach(a=>{if(a.name.startsWith(COMMENT_PREFIX))el.removeAttribute(a.name);}));
     event.preventDefault();event.clipboardData.setData('text/plain',selection.toString());event.clipboardData.setData('text/html',box.innerHTML);
   });
-  window.addEventListener('DOMContentLoaded',hydrateGuides);
+  window.addEventListener('DOMContentLoaded',()=>{guideEdits=loadContentMap(GUIDE_KEY);hydrateGuides();});
   document.addEventListener('pointerdown',event=>{if(!panel&&!toolbar.contains(event.target)&&!surface(event.target)){toolbar.hidden=true;selected=null;}});
 })();

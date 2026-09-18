@@ -1,0 +1,5 @@
+.cc-version-banner{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 14px;margin:8px 0 16px;border:1px solid var(--card-border);border-radius:10px;font-size:13px}
+.cc-version-link{color:var(--accent,#2563eb);font-size:12px;text-underline-offset:3px}
+.cc-version-nav{padding-bottom:8px;text-align:right}
+[data-cc-version]:not([data-cc-version="legacy"]) .source-doc{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+[data-cc-version]:not([data-cc-version="legacy"]) .source-table{min-width:580px}
