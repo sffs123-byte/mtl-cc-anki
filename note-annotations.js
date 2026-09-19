@@ -14,7 +14,9 @@
   // The displayed root's own revision, not the merged whole-storage object.
   // Merging another card must never bless stale HTML in an untouched surface.
   const renderedRevision=new WeakMap();
-  function rememberRevision(root,id,guide){if(root)renderedRevision.set(root,{id,guide,value:(guide?guideEdits:edits)[id],html:root.innerHTML});}
+  function restoreHTML(root,html,id,guide){root.innerHTML=html;window.MTLCCSeeds?.decorate(root,id,guide);}
+  function contentHTML(root){return window.MTLCCSeeds?.html(root) ?? root.innerHTML;}
+  function rememberRevision(root,id,guide){if(root){window.MTLCCSeeds?.decorate(root,id,guide);renderedRevision.set(root,{id,guide,value:(guide?guideEdits:edits)[id],html:contentHTML(root)});}}
   const toolbar = document.createElement('div');
   toolbar.id = 'noteFormatToolbar'; toolbar.className = 'cnuNoteToolbar'; toolbar.hidden = true;
   toolbar.setAttribute('role','toolbar'); toolbar.setAttribute('aria-label','선택한 글 서식과 댓글');
@@ -37,19 +39,19 @@
     return id && QUIZ_DATA[id] ? {root,id,guide} : null;
   }
   function persist(target) {
-    const {root,id,guide}=target, html=root.innerHTML;
+    const {root,id,guide}=target, html=contentHTML(root);
     const latest=loadContentMap(guide?GUIDE_KEY:EDITS_KEY);
     const known=renderedRevision.get(root);
     if(!known||known.id!==id||known.guide!==guide||latest[id]!==known.value) {const error=new Error('This answer was changed in another tab. Reload before annotating.');error.code='ANNOTATION_CONFLICT';throw error;}
     const ids=guide?['guide-'+id, ...(activeQuizCardId===id?['quizGuide']:[])]:['ans-content-'+id,...(activeQuizCardId===id?['quizAnsContent']:[])];
-    for(const key of ids){const other=document.getElementById(key);if(other&&other!==root&&other.contentEditable==='true'&&other.innerHTML!==renderedRevision.get(other)?.html&&other.innerHTML!==html){const error=new Error('This answer has different unsaved changes in another editor.');error.code='ANNOTATION_CONFLICT';throw error;}}
+    for(const key of ids){const other=document.getElementById(key);if(other&&other!==root&&other.contentEditable==='true'&&contentHTML(other)!==renderedRevision.get(other)?.html&&contentHTML(other)!==html){const error=new Error('This answer has different unsaved changes in another editor.');error.code='ANNOTATION_CONFLICT';throw error;}}
     if(guide) { const next={...latest,[id]:html}; saveContentMap(GUIDE_KEY,next); guideEdits=next; }
     else { const previous=edits; edits={...latest,[id]:html}; try {saveEdits();} catch(e){edits=previous;throw e;} }
     ids.forEach(key=>{const other=document.getElementById(key);if(other&&(!guide||other.dataset.loaded||key==='quizGuide')){if(other!==root)other.innerHTML=html;rememberRevision(other,id,guide);}});
     report('서식·댓글 저장됨');
   }
   function remember(target,before) {
-    const after=target.root.innerHTML;if(before===after)return;
+    const after=contentHTML(target.root);if(before===after)return;
     undoStack.push({id:target.id,guide:target.guide,before,after});if(undoStack.length>50)undoStack.shift();redoStack.length=0;
   }
   function undoAnnotation(redo=false) {
@@ -57,9 +59,9 @@
     const active=surface(document.activeElement)||surface(window.getSelection()?.anchorNode)||selected;
     if(!active||active.id!==item.id||active.guide!==item.guide)return false;
     const expected=redo?item.before:item.after;
-    if(active.root.innerHTML!==expected)return false;
+    if(contentHTML(active.root)!==expected)return false;
     try {active.root.innerHTML=redo?item.after:item.before;persist(active);stack.pop();(redo?undoStack:redoStack).push(item);selected=null;toolbar.hidden=true;report(redo?'다시 적용됨':'서식·댓글 되돌림');return true;}
-    catch(error){active.root.innerHTML=expected;report('최신 수정본과 충돌하여 되돌리지 못했습니다. 새로고침해 주세요.',true);return true;}
+    catch(error){restoreHTML(active.root,expected,active.id,active.guide);report('최신 수정본과 충돌하여 되돌리지 못했습니다. 새로고침해 주세요.',true);return true;}
   }
   function hydrateGuides() {
     function hydrate(root,id) {
@@ -67,7 +69,7 @@
       const known=renderedRevision.get(root);
       // Opening/closing a toggle must not replace an unsaved typing draft.
       if(root.contentEditable==='true'&&known?.id===id)return;
-      if(Object.hasOwn(guideEdits,id)&&root.innerHTML!==guideEdits[id])root.innerHTML=guideEdits[id];
+      if(Object.hasOwn(guideEdits,id)&&contentHTML(root)!==guideEdits[id])root.innerHTML=guideEdits[id];
       rememberRevision(root,id,true);
     }
     for(const id of ALL_IDS) {const root=document.getElementById('guide-'+id);if(root?.dataset.loaded)hydrate(root,id);}
@@ -83,7 +85,7 @@
     if(enabled)enableImageDrop(root);
   }
   // Wrap only render boundaries; the app's existing drawing/editing/backup code stays intact.
-  const renderBase=renderQuizCard; renderQuizCard=function(...args){flushEditableChangesForBackup();if(panel)closeComment();selected=null;toolbar.hidden=true;const r=renderBase(...args);const root=document.getElementById('quizAnsContent'),card=document.getElementById('ans-content-'+args[0]);if(root&&card&&renderedRevision.has(card))renderedRevision.set(root,{...renderedRevision.get(card)});else rememberRevision(root,args[0],false);hydrateGuides();return r;};
+  const renderBase=renderQuizCard; renderQuizCard=function(...args){flushEditableChangesForBackup();if(panel)closeComment();selected=null;toolbar.hidden=true;const r=renderBase(...args);const root=document.getElementById('quizAnsContent'),card=document.getElementById('ans-content-'+args[0]);if(root&&card&&renderedRevision.has(card)){window.MTLCCSeeds?.decorate(root,args[0],false);renderedRevision.set(root,{...renderedRevision.get(card),html:contentHTML(root)});}else rememberRevision(root,args[0],false);hydrateGuides();return r;};
   const guideBase=toggleGuide; toggleGuide=function(...args){const r=guideBase(...args);hydrateGuides();return r;};
   const quizGuideBase=toggleQuizGuide; toggleQuizGuide=function(...args){const r=quizGuideBase(...args);hydrateGuides();return r;};
   const applyEditsBase=applyEdits;applyEdits=function(...args){const r=applyEditsBase(...args);ALL_IDS.forEach(id=>rememberRevision(document.getElementById('ans-content-'+id),id,false));return r;};
@@ -109,9 +111,9 @@
     if(window.MTLStorageRestoreInProgress)return;
     const dirty=new Map();
     function addDirty(root,id,guide=false){
-      if(root?.contentEditable!=='true'||root.innerHTML===renderedRevision.get(root)?.html)return;
+      if(root?.contentEditable!=='true'||contentHTML(root)===renderedRevision.get(root)?.html)return;
       const key=(guide?'guide:':'answer:')+id,previous=dirty.get(key);
-      if(previous&&previous.root.innerHTML!==root.innerHTML){const error=new Error('같은 내용의 두 편집창에 서로 다른 미저장 입력이 있습니다.');error.code='ANNOTATION_CONFLICT';saveFailure(error);throw error;}
+      if(previous&&contentHTML(previous.root)!==contentHTML(root)){const error=new Error('같은 내용의 두 편집창에 서로 다른 미저장 입력이 있습니다.');error.code='ANNOTATION_CONFLICT';saveFailure(error);throw error;}
       dirty.set(key,{root,id,guide});
     }
     ALL_IDS.forEach(id=>{addDirty(document.getElementById('ans-content-'+id),id);addDirty(document.getElementById('guide-'+id),id,true);});
@@ -121,14 +123,14 @@
     for(const target of dirty.values()){
       const known=renderedRevision.get(target.root),latest=target.guide?guides:answers;
       if(!known||known.id!==target.id||latest[target.id]!==known.value){const error=new Error('다른 탭에서 수정된 내용이 있습니다. 현재 입력을 보존하고 새로고침해 주세요.');error.code='ANNOTATION_CONFLICT';saveFailure(error);throw error;}
-      latest[target.id]=target.root.innerHTML;
+      latest[target.id]=contentHTML(target.root);
     }
     if([...dirty.values()].some(t=>!t.guide))saveContentMap(EDITS_KEY,answers);
     if([...dirty.values()].some(t=>t.guide))saveContentMap(GUIDE_KEY,guides);
     edits=answers;guideEdits=guides;
     for(const target of dirty.values()){
       const ids=target.guide?['guide-'+target.id,...(renderedRevision.get(document.getElementById('quizGuide'))?.id===target.id?['quizGuide']:[])]:['ans-content-'+target.id,...(renderedRevision.get(document.getElementById('quizAnsContent'))?.id===target.id?['quizAnsContent']:[])];
-      ids.forEach(id=>{const root=document.getElementById(id);if(root&&(!target.guide||root.dataset.loaded||id==='quizGuide')){if(root!==target.root)root.innerHTML=target.root.innerHTML;rememberRevision(root,target.id,target.guide);}});
+      ids.forEach(id=>{const root=document.getElementById(id);if(root&&(!target.guide||root.dataset.loaded||id==='quizGuide')){if(root!==target.root)root.innerHTML=contentHTML(target.root);rememberRevision(root,target.id,target.guide);}});
     }
   };
   // Save ongoing typing on reload as well as explicit save/backup/navigation.
@@ -209,7 +211,7 @@
   }
   function applyToSelection(action,value,comment) {
     if(!selected?.root.isConnected || !selected.quote.trim())return false;
-    const target=selected,before=target.root.innerHTML;
+    const target=selected,before=contentHTML(target.root);
     try {
       const leaves=selectedLeaves(target);if(!leaves.length)return false;
       const boldOff=action==='bold'&&leaves.every(n=>Number(getComputedStyle(n.parentElement).fontWeight)>=600);
@@ -228,40 +230,71 @@
       const range=document.createRange();range.setStart(leaves[0],0);range.setEnd(leaves.at(-1),leaves.at(-1).length);
       const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);selected={...target,range:range.cloneRange(),quote:selection.toString()};
       persist(target);remember(target,before);positionToolbar();return true;
-    } catch(error) {target.root.innerHTML=before;selected=null;toolbar.hidden=true;report(error.code==='ANNOTATION_CONFLICT'?'다른 탭의 최신 수정본이 있습니다. 새로고침 후 다시 선택해 주세요.':'저장하지 못했습니다. 저장공간을 확인하고 다시 시도하세요.',true);console.error('Annotation save failed',error);return false;}
+    } catch(error) {restoreHTML(target.root,before,target.id,target.guide);selected=null;toolbar.hidden=true;report(error.code==='ANNOTATION_CONFLICT'?'다른 탭의 최신 수정본이 있습니다. 새로고침 후 다시 선택해 주세요.':'저장하지 못했습니다. 저장공간을 확인하고 다시 시도하세요.',true);console.error('Annotation save failed',error);return false;}
   }
   toolbar.addEventListener('click',event=>{const btn=event.target.closest('button');if(!btn||!selected)return;if(btn.dataset.action==='comment')openComment();else applyToSelection(btn.dataset.action,btn.dataset.value);});
 
   function marks(root,id){return [...root.querySelectorAll('[data-note-comment-id]')].filter(n=>n.getAttribute(COMMENT_PREFIX+'id')===id);}
-  function closeComment(){if(!panel)return;const origin=panel.origin;panel.backdrop.remove();panel=null;if(origin?.isConnected)origin.focus({preventScroll:true});toolbar.hidden=true;}
+  function closeComment(){if(!panel)return;const origin=panel.origin;if(panel.target.root.contains(window.getSelection()?.anchorNode))window.getSelection().removeAllRanges();panel.backdrop.remove();panel=null;if(origin?.isConnected)origin.focus({preventScroll:true});toolbar.hidden=true;}
   function openComment(existing,target) {
     if(panel)closeComment();
     target=target||selected;if(!target)return;
-    if(!existing) {const found=target.root.querySelectorAll('[data-note-comment-id]');existing=[...found].find(el=>target.range.intersectsNode(el));}
+    if(!existing) {const found=target.root.querySelectorAll('[data-note-comment-id]');existing=[...found].find(el=>target.range?.intersectsNode(el));}
     const id=existing?.getAttribute(COMMENT_PREFIX+'id');
     const matching=id?marks(target.root,id):[];
     const quote=id?matching.map(n=>n.textContent).join(''):target.quote;
     const text=existing?.getAttribute(COMMENT_PREFIX+'text')||'';
+    const seeds=window.MTLCCSeeds?.forTarget(target,existing)||[];
     const backdrop=document.createElement('div');backdrop.className='noteCommentBackdrop';
     backdrop.innerHTML='<section class="noteCommentDialog" role="dialog" aria-modal="true" aria-labelledby="noteCommentTitle"><header><h2 id="noteCommentTitle"></h2><button aria-label="댓글 닫기" data-close>×</button></header><div class="noteCommentContent"><div class="noteCommentQuoteLabel">선택한 글</div><blockquote class="noteCommentQuote"></blockquote><p class="noteCommentBody"></p><label for="noteCommentInput">댓글 내용</label><textarea id="noteCommentInput" rows="5" maxlength="2000" placeholder="이 부분에 대한 메모를 남겨 보세요."></textarea><div class="noteCommentCount"></div><p class="noteCommentError" role="alert"></p></div><footer><button data-delete class="noteCommentDanger">삭제</button><button data-cancel>취소</button><button data-save class="noteCommentPrimary"></button></footer></section>';
     document.body.append(backdrop);toolbar.hidden=true;
-    panel={backdrop,target,id,quote,text,origin:existing||target.root,mode:id?'view':'create',confirmDelete:false};
+    panel={backdrop,target,id,quote,text,origin:existing||target.root,mode:id?'view':seeds.length?'seed':'create',seeds,confirmDelete:false};
     const input=backdrop.querySelector('textarea');input.value=text;
     backdrop.querySelector('.noteCommentQuote').textContent=quote;
-    const draw=()=>{if(!panel)return;const view=panel.mode==='view';backdrop.querySelector('h2').textContent=panel.mode==='create'?'댓글 달기':view?'댓글':'댓글 수정';backdrop.querySelector('.noteCommentBody').textContent=panel.text;backdrop.querySelector('.noteCommentBody').hidden=!view;input.hidden=view;backdrop.querySelector('label').hidden=view;backdrop.querySelector('[data-delete]').hidden=!panel.id;backdrop.querySelector('[data-save]').textContent=view?'수정':'저장';backdrop.querySelector('.noteCommentCount').textContent=view?'':input.value.length+' / 2000';backdrop.querySelector('[data-save]').disabled=!view&&!input.value.trim();(view?backdrop.querySelector('[data-close]'):input).focus({preventScroll:true});};
+    const seedSection=document.createElement('section');seedSection.className='noteSeedSection';seedSection.hidden=!seeds.length;
+    for(const seed of seeds){const article=document.createElement('article'),title=document.createElement('h3'),body=document.createElement('p');title.textContent='제공 설명 · '+seed.quote;body.textContent=seed.body;article.append(title,body);seedSection.append(article);}
+    backdrop.querySelector('.noteCommentBody').before(seedSection);
+    // Several private notes may cover different pieces of one provided keyword.
+    // Keep every note reachable instead of letting the first match shadow the others.
+    if(seeds.length){
+      const related=new Map();
+      for(const node of target.root.querySelectorAll('[data-note-comment-id]')){
+        if(seeds.some(seed=>window.MTLCCSeeds.marks(target.root,seed.id).some(mark=>node.contains(mark)||mark.contains(node))))related.set(node.getAttribute(COMMENT_PREFIX+'id'),node);
+      }
+      if(related.size>1){const group=document.createElement('div');group.className='noteRelatedComments';
+        let n=0;for(const [noteId,node]of related){const button=document.createElement('button');button.type='button';button.textContent='내 댓글 '+(++n);button.setAttribute('aria-pressed',String(noteId===id));button.onclick=()=>openComment(node,{...target,range:null,seedIds:seeds.map(seed=>seed.id)});group.append(button);}
+        seedSection.after(group);
+      }
+    }
+    const personalLabel=document.createElement('div');personalLabel.className='notePersonalLabel';personalLabel.textContent='내 댓글';personalLabel.hidden=!id;backdrop.querySelector('.noteCommentBody').before(personalLabel);
+    if(target.missing){const hint=document.createElement('p');hint.className='noteSeedHint';hint.textContent='제공된 키워드 설명입니다. 내 수정본에 정확히 연결되지 않은 설명도 여기서 볼 수 있습니다.';seedSection.prepend(hint);}
+
+    const draw=()=>{
+      if(!panel)return;const seedOnly=panel.mode==='seed',view=panel.mode==='view'||seedOnly;
+      backdrop.querySelector('h2').textContent=seedOnly?'키워드 설명':panel.mode==='create'?'댓글 달기':view?'댓글':'댓글 수정';
+      const identical=seeds.some(seed=>seed.body.trim()===panel.text.trim());
+      backdrop.querySelector('.noteCommentBody').textContent=identical?'제공 설명과 같은 내 댓글이 저장되어 있습니다.':panel.text;
+      backdrop.querySelector('.noteCommentBody').hidden=!view||seedOnly;
+      personalLabel.hidden=!panel.id;input.hidden=view;backdrop.querySelector('label').hidden=view;
+      backdrop.querySelector('[data-delete]').hidden=!panel.id;
+      const save=backdrop.querySelector('[data-save]');save.textContent=seedOnly?'내 댓글 달기':view?'수정':'저장';save.hidden=!!target.missing;
+      backdrop.querySelector('.noteCommentCount').textContent=view?'':input.value.length+' / 2000';save.disabled=!view&&!input.value.trim();
+      (view?backdrop.querySelector('[data-close]'):input).focus({preventScroll:true});
+    };
     input.addEventListener('input',()=>{backdrop.querySelector('.noteCommentCount').textContent=input.value.length+' / 2000';backdrop.querySelector('[data-save]').disabled=!input.value.trim();});
     backdrop.querySelector('[data-close]').onclick=closeComment;backdrop.querySelector('[data-cancel]').onclick=closeComment;
     backdrop.querySelector('[data-save]').onclick=()=>{
       if(panel.mode==='view'){panel.mode='edit';draw();return;}
+      if(panel.mode==='seed'){panel.mode='create';draw();return;}
       const text=input.value.trim();if(!text||text.length>2000)return;
       if(!panel.target.root.isConnected){backdrop.querySelector('.noteCommentError').textContent='연결된 글이 변경되었습니다. 다시 선택해 주세요.';return;}
-      if(panel.id) {const before=panel.target.root.innerHTML;try {for(const node of marks(panel.target.root,panel.id)){node.setAttribute(COMMENT_PREFIX+'text',text);node.setAttribute(COMMENT_PREFIX+'updated-at',new Date().toISOString());}persist(panel.target);remember(panel.target,before);closeComment();}catch(error){panel.target.root.innerHTML=before;backdrop.querySelector('.noteCommentError').textContent=error.code==='ANNOTATION_CONFLICT'?'다른 탭의 최신 수정본이 있습니다. 새로고침 후 다시 시도해 주세요.':'댓글을 저장하지 못했습니다.';}}
+      if(panel.id) {const before=contentHTML(panel.target.root);try {for(const node of marks(panel.target.root,panel.id)){node.setAttribute(COMMENT_PREFIX+'text',text);node.setAttribute(COMMENT_PREFIX+'updated-at',new Date().toISOString());}persist(panel.target);remember(panel.target,before);closeComment();}catch(error){restoreHTML(panel.target.root,before,panel.target.id,panel.target.guide);backdrop.querySelector('.noteCommentError').textContent=error.code==='ANNOTATION_CONFLICT'?'다른 탭의 최신 수정본이 있습니다. 새로고침 후 다시 시도해 주세요.':'댓글을 저장하지 못했습니다.';}}
       else {selected=panel.target;const now=new Date().toISOString();if(applyToSelection('comment',null,{id:'note-'+crypto.randomUUID(),text,author:'','created-at':now,'updated-at':now}))closeComment();}
     };
     backdrop.querySelector('[data-delete]').onclick=()=>{
       if(!panel.target.root.isConnected){backdrop.querySelector('.noteCommentError').textContent='연결된 글이 변경되었습니다. 다시 선택해 주세요.';return;}
       if(!panel.confirmDelete){panel.confirmDelete=true;backdrop.querySelector('.noteCommentError').textContent='댓글만 삭제할까요? 선택한 글과 서식은 유지됩니다.';backdrop.querySelector('[data-delete]').textContent='댓글 삭제 확인';return;}
-      const before=panel.target.root.innerHTML;try {for(const node of marks(panel.target.root,panel.id))for(const attr of [...node.attributes])if(attr.name.startsWith(COMMENT_PREFIX))node.removeAttribute(attr.name);persist(panel.target);remember(panel.target,before);closeComment();}catch(error){panel.target.root.innerHTML=before;backdrop.querySelector('.noteCommentError').textContent=error.code==='ANNOTATION_CONFLICT'?'다른 탭의 최신 수정본이 있습니다. 새로고침 후 다시 시도해 주세요.':'댓글을 삭제하지 못했습니다.';}
+      const before=contentHTML(panel.target.root);try {for(const node of marks(panel.target.root,panel.id))for(const attr of [...node.attributes])if(attr.name.startsWith(COMMENT_PREFIX))node.removeAttribute(attr.name);persist(panel.target);remember(panel.target,before);closeComment();}catch(error){restoreHTML(panel.target.root,before,panel.target.id,panel.target.guide);backdrop.querySelector('.noteCommentError').textContent=error.code==='ANNOTATION_CONFLICT'?'다른 탭의 최신 수정본이 있습니다. 새로고침 후 다시 시도해 주세요.':'댓글을 삭제하지 못했습니다.';}
     };
     draw();
   }
@@ -279,30 +312,39 @@
   // Native typed-text undo remains owned by the browser. Do not replay stale
   // whole-HTML annotations over a later unsaved typing operation.
   document.addEventListener('input',event=>{if(surface(event.target)){undoStack.length=0;redoStack.length=0;}});
+  const commentSelector='[data-note-comment-id],[data-cc-seed-id]';
+  function openMarked(mark,target){
+    if(mark.hasAttribute('data-cc-seed-id')){const seeded=window.MTLCCSeeds?.targetFromMark(mark,target);if(seeded)openComment(null,seeded);}
+    else openComment(mark,target);
+  }
+  window.MTLCCSeedOpen=(target,origin)=>{openComment(null,target);if(panel)panel.origin=origin;};
   document.addEventListener('click',event=>{
     if(panel || window.getSelection()?.toString())return;
-    const mark=event.target.closest?.('[data-note-comment-id]'),target=surface(mark);
-    if(mark&&target){event.preventDefault();openComment(mark,target);}
+    const mark=event.target.closest?.(commentSelector),target=surface(mark);
+    if(mark&&target){event.preventDefault();openMarked(mark,target);}
   });
-  // iOS/WebKit can suppress synthesized click after this app's touch handlers.
-  // A short stationary touch opens the mark; scrolling/long-press selection do not.
+  document.addEventListener('keydown',event=>{
+    if(panel||!['Enter',' '].includes(event.key)||!event.target.matches?.('[data-cc-seed-id]'))return;
+    const target=surface(event.target);if(target){event.preventDefault();openMarked(event.target,target);}
+  });
+  // A short stationary touch opens either kind of comment; scrolling never does.
   let commentTouch=null;
   document.addEventListener('pointerdown',event=>{
-    const mark=event.target.closest?.('[data-note-comment-id]');
+    const mark=event.target.closest?.(commentSelector);
     commentTouch=event.pointerType==='touch'&&mark?{mark,x:event.clientX,y:event.clientY,time:performance.now(),pointerId:event.pointerId}:null;
   });
   document.addEventListener('pointercancel',()=>{commentTouch=null;});
   document.addEventListener('pointerup',event=>{
     const touch=commentTouch;commentTouch=null;
     if(panel||!touch||touch.pointerId!==event.pointerId||performance.now()-touch.time>650||Math.hypot(event.clientX-touch.x,event.clientY-touch.y)>10||window.getSelection()?.toString())return;
-    const target=surface(touch.mark);if(target&&touch.mark.isConnected)openComment(touch.mark,target);
+    const target=surface(touch.mark);if(target&&touch.mark.isConnected)openMarked(touch.mark,target);
   });
   document.addEventListener('copy',event=>{
     const selection=window.getSelection();if(!selection?.rangeCount||selection.isCollapsed)return;
     const range=selection.getRangeAt(0),target=surface(range.startContainer);if(!target||surface(range.endContainer)?.root!==target.root)return;
     const box=document.createElement('div');let content=range.cloneContents(),ancestor=range.commonAncestorContainer.nodeType===1?range.commonAncestorContainer:range.commonAncestorContainer.parentElement;
     while(ancestor&&ancestor!==target.root&&target.root.contains(ancestor)){const shell=ancestor.cloneNode(false);shell.append(content);content=shell;ancestor=ancestor.parentElement;}
-    box.append(content);box.querySelectorAll('*').forEach(el=>[...el.attributes].forEach(a=>{if(a.name.startsWith(COMMENT_PREFIX))el.removeAttribute(a.name);}));
+    box.append(content);window.MTLCCSeeds?.clean(box);box.querySelectorAll('*').forEach(el=>[...el.attributes].forEach(a=>{if(a.name.startsWith(COMMENT_PREFIX))el.removeAttribute(a.name);}));
     event.preventDefault();event.clipboardData.setData('text/plain',selection.toString());event.clipboardData.setData('text/html',box.innerHTML);
   });
   window.addEventListener('DOMContentLoaded',()=>{guideEdits=loadContentMap(GUIDE_KEY);hydrateGuides();});

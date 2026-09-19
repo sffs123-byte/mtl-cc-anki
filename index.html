@@ -703,7 +703,7 @@ body.quiz-mode-active .mobile-review-start { display: none !important; }
 @media(max-width:600px){.collection-entry{grid-template-columns:1fr;gap:8px}.collection-entry a{padding:14px}.case-education>div{grid-template-columns:1fr;gap:3px;padding:7px 0}.case-education dd{font-size:13px}.quiz-header .collection-back{font-size:11px;padding:5px 8px}}
 @media(max-width:768px){.quiz-header{flex-wrap:wrap;overflow-x:visible}}
 </style>
-<link rel="stylesheet" href="note-annotations.css">
+<link rel="stylesheet" href="note-annotations.css?v=20260919-seeds">
 <link rel="stylesheet" href="jam-case.css">
 </head>
 <body>
@@ -6907,15 +6907,16 @@ function applyCropEdits() {
 }
 
 // Observe guide areas being opened to apply crops and wrap images
+// Coalesce text annotation mutations; one image pass per batch instead of per span.
+let guideImageRefreshTimer;
 const guideObserver = new MutationObserver(function(mutations) {
-    mutations.forEach(function(m) {
-        if (m.type === 'childList' || m.type === 'attributes') {
-            setTimeout(() => {
-                wrapGuideImages();
-                applyCropEdits();
-            }, 50);
-        }
-    });
+    if (!mutations.some(m => m.type === 'childList' || m.type === 'attributes')) return;
+    if (guideImageRefreshTimer) return;
+    guideImageRefreshTimer = setTimeout(() => {
+        guideImageRefreshTimer = null;
+        wrapGuideImages();
+        applyCropEdits();
+    }, 50);
 });
 
 
@@ -7192,6 +7193,8 @@ window.addEventListener('DOMContentLoaded', () => {
     applyCaseFilter();
 });
 </script>
-<script src="note-annotations.js?v=20260918-detail-edit" defer></script>
+<script src="cc-keyword-seeds.js?v=20260919" defer></script>
+<script src="cc-keyword-comments.js?v=20260919" defer></script>
+<script src="note-annotations.js?v=20260919-seeds" defer></script>
 </body>
 </html>
